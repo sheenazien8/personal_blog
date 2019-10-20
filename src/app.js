@@ -1,11 +1,14 @@
 // app.js
 import express from 'express'
-import dotenv from "dotenv";
+import dotenv from "dotenv"
 const app = express()
 import routes from "./routes"
-import config from "./../config";
+import config from "./../config"
+import path from "path"
 
 dotenv.config()
+app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, "views"))
 app.use(express.json())
 
 routes.init(app)
