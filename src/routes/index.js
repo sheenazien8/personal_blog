@@ -11,7 +11,70 @@ const init = (server) => {
 
   server.get('/', (req, res, next) =>{
     return res.render('index', {
-      title: 'My Personal Blog'
+      currentUrl: req.route.path,
+      title: 'My Personal Blog',
+      blogs: [
+        {
+          title: 'Mudahnya Menjadi Pekerja Yang Sering Bersyukur'
+        },
+        {
+          title: 'Jangan Malu Jadi Karyawan'
+        },
+        {
+          title: 'Jadilah Pekerja Yang Sadar Akan Kemampuan'
+        },
+        {
+          title: 'Skill Lebih Utama'
+        },
+        {
+          title: 'Permainan Ini Belum Selesai'
+        }
+      ]
+    })
+  })
+
+  server.get('/blog', (req, res, next) => {
+    return res.render('blog/index', {
+      currentUrl: req.route.path,
+      title: 'List Blog'
+    })
+  })
+
+  server.get('/blog/detail', (req, res, next) => {
+    return res.render('blog/detail', {
+      currentUrl: req.route.path,
+      title: 'Detail'
+    })
+  })
+
+  server.get('/portfolio', (req, res, next) => {
+    return res.render('portfolio/index', {
+      currentUrl: req.route.path,
+      title: 'List Portfolio',
+      blogs: [
+        {
+          title: 'Mudahnya Menjadi Pekerja Yang Sering Bersyukur'
+        },
+        {
+          title: 'Jangan Malu Jadi Karyawan'
+        },
+        {
+          title: 'Jadilah Pekerja Yang Sadar Akan Kemampuan'
+        },
+        {
+          title: 'Skill Lebih Utama'
+        },
+        {
+          title: 'Permainan Ini Belum Selesai'
+        }
+      ]
+    })
+  })
+
+  server.get('/portfolio/detail', (req, res, next) => {
+    return res.render('portfolio/detail', {
+      currentUrl: req.route.path,
+      title: 'Detail'
     })
   })
 

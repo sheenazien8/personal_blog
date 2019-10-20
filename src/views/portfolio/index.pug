@@ -1,0 +1,10 @@
+extends ./../layouts/app.pug
+
+block content
+  .wrap-portfolio
+    h3 Porfolio
+    .portfolio
+      each blog in blogs
+        .list-portfolio
+          a(href="/portfolio/detail")= blog.title
+          p Contoh deskripsi

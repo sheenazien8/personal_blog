@@ -1,4 +1,40 @@
 extends layouts/app.pug
 
 block content
-  p Wellcome to my blog
+  .landing
+    .describe
+      h1 Halo, saya Sheena Muhammad Ali Zien
+      h2 Selamat datang di diaryku ;;)
+      h3 Disini kamu bisa belajar, membaca diaryku yang membahas programming, dan tentang pekerjaan atau melihat-lihat apa yang sudah aku buat
+
+  hr
+  .wrap-blog
+    h3 Blog
+    .blog
+      ul
+        each blog in blogs
+          li.list
+            a(href="/blog")= blog.title
+  p
+   a(href="/blog" style="color: rgb(87, 87, 87);") Lihat lebih banyak lagi
+  hr
+
+  .wrap-diary
+    h3 Diary
+    .blog
+      ul
+        each blog in blogs
+          li.list
+            a(href="/blog")= blog.title
+  p
+    a(href="/blog" style="color: rgb(87, 87, 87);") Lihat lebih banyak lagi
+  hr
+
+  .wrap-portfolio
+    h3 Porfolio
+    .portfolio
+      each blog in blogs
+        .list-portfolio
+          a(href="/portfolio/detail")= blog.title
+          p Contoh deskripsi
+

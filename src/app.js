@@ -5,6 +5,7 @@ const app = express()
 import routes from "./routes"
 import config from "./../config"
 import path from "path"
+import helper from "./helper"
 
 dotenv.config()
 app.set('view engine', 'pug')
