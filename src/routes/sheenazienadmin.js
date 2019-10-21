@@ -19,12 +19,14 @@ let sessionChecker = (req, res, next) => {
       res.redirect('/sheenazienadmin/');
   } else if (req.path == '/' && !req.session.user && !req.session.logedIn) {
     res.redirect('/sheenazienadmin/login');
-  }else {
+  } else if (req.path != '/login' && !req.session.user && !req.session.logedIn) {
+    res.redirect('/sheenazienadmin/login');
+  } else {
     next();
   }
 };
 
-router.get('/blog', sessionChecker, SheenaZienBlog.create)
+router.get('/blog', sessionChecker, SheenaZienBlog.index)
       .post('/blog', sessionChecker, SheenaZienBlog.create)
       .get('/blog/:id', sessionChecker, SheenaZienBlog.detail)
       .put('/blog/:id', sessionChecker, SheenaZienBlog.update)

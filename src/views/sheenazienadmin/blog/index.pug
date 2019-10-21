@@ -1,0 +1,68 @@
+extends ./../layouts/app.pug
+
+block content
+  <!-- Modal -->
+  div(id="myModal" class="modal fade" role="dialog")
+    div.modal-dialog.modal-lg
+      div(class="modal-content")
+        div(class="modal-header")
+          h4(class="modal-title") Blog
+          button(type="button" class="close" data-dismiss="modal")
+            span(aria-hidden="true") &times;
+        div(class="modal-body")
+            <div class="form-group">
+              <label>Page Title</label>
+              <input type="text" class="form-control" placeholder="Page Title">
+            </div>
+            <div class="form-group">
+              <label>Page Body</label>
+              <textarea name="editor1" class="form-control" placeholder="Page Body"></textarea>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox"> Published
+              </label>
+            </div>
+            <div class="form-group">
+              <label>Meta Tags</label>
+              <input type="text" class="form-control" placeholder="Add Some Tags...">
+            </div>
+            <div class="form-group">
+              <label>Meta Description</label>
+              <input type="text" class="form-control" placeholder="Add Meta Description...">
+            </div>
+        div(class="modal-footer")
+          button(type="button" class="btn btn-default" data-dismiss="modal") Close
+  br
+  .card
+    .card-header
+      button(data-toggle="modal" data-target="#myModal").btn.btn-primary
+        i.fa.fa-plus Tambah Blog
+    .card-body
+      table.table
+        tr
+          th #
+          th Title
+          th Description
+          th Date Post
+          th Status
+          th Views
+          th Action
+        each blog in blogs
+          tr
+            td 1
+            td= blog.title
+            td= blog.body.substring(0,60)
+                a(href="/sheenazienadmin/blog/" + blog.id) ..detail
+            td= blog.date
+            td
+                if blog.status
+                  span.badge.badge-success Active
+                else
+                  span.badge.badge-danger Inactive
+            td
+              span.badge.badge-default
+                i.fa.fa-eye= blog.views
+            td
+              button.btn.btn-info
+                i.fa.fa-pencil

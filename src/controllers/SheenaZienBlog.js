@@ -1,4 +1,4 @@
-// import ReflectionModel from '../models/Blog';
+import database from "./../../config/database"
 
 const SheenaZienBlog = {
   /**
@@ -16,6 +16,13 @@ const SheenaZienBlog = {
    * @returns {object} reflections array
    */
   index(req, res) {
+    database.mysql().query("SELECT * FROM blogs", (error, results, fields) => {
+      console.log(results)
+      return res.render('sheenazienadmin/blog/index', {
+        title: 'Admin Blog',
+        blogs: results
+      })
+    })
   },
   /**
    *
