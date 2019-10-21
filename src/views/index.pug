@@ -5,7 +5,8 @@ block content
     .describe
       h1 Halo, saya Sheena Muhammad Ali Zien
       h2 Selamat datang di diaryku ;;)
-      h3 Disini kamu bisa belajar, membaca diaryku yang membahas programming, dan tentang pekerjaan atau melihat-lihat apa yang sudah aku buat
+      h3 Disini kamu bisa belajar programming, membaca diary programming, dan tentang pekerjaan atau melihat-lihat apa yang sudah aku buat.
+        span(style="font-size: 1.5rem")  check it dot!!
 
   hr
   .wrap-blog
@@ -23,9 +24,9 @@ block content
     h3 Diary
     .blog
       ul
-        each blog in blogs
+        each diary in diaries
           li.list
-            a(href="/blog")= blog.title
+            a(href="/diary")= diary.title
   p
     a(href="/blog" style="color: rgb(87, 87, 87);") Lihat lebih banyak lagi
   hr

@@ -1,0 +1,13 @@
+extends ./../layouts/app.pug
+block styles
+  style
+    include style.css
+block content
+  #login
+    .center
+      .error-box
+      h2 Login Admin Sheena Zien
+      form(method="post" action="/sheenazienadmin/login/action").fl
+        input(type="text" name="username" placeholder="Username or Email").itpw
+        input(type="password" name="password" placeholder="Password").itpw
+        input(type="submit" name="login" value="Login").its

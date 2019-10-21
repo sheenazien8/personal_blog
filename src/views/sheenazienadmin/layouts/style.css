@@ -1,0 +1,15 @@
+body{
+  margin: auto;
+  width: 60%;
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  font-family: 'Oxygen', sans-serif;
+  color:
+  rgb(87, 87, 87);
+  background: #faf9f5;
+  max-width: 800px;
+}
+
+.container{
+  padding: 15px;
+}

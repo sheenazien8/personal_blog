@@ -1,0 +1,11 @@
+- let lists = [{name: 'Home', url: '/'}, {name: 'Blog', url: '/blog'}, {name: 'Portfolio', url: '/portfolio'}, {name:'toggle', url: '#', toggle: true}, {name: 'Diary Error', url: '/diary'}]
+
+.topnav#myTopnav
+  each item in lists
+    if !item.toggle
+      a(href=item.url)= item.name
+    if item.toggle
+      a(href="javascript:void(0);" onclick="openNav()").icon
+        i.fa.fa-bars
+
+

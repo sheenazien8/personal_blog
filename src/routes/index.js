@@ -1,4 +1,5 @@
 import reflection from "./reflection";
+import sheenazienadmin from "./sheenazienadmin";
 import express from 'express';
 const app = express()
 const router = express.Router()
@@ -28,6 +29,14 @@ const init = (server) => {
         },
         {
           title: 'Permainan Ini Belum Selesai'
+        }
+      ],
+      diaries: [
+        {
+          title: 'Error MySQL di awal install Ubuntu'
+        },
+        {
+          title: 'Valet Not Found Ketika nyobain valet di linux'
         }
       ]
     })
@@ -79,6 +88,7 @@ const init = (server) => {
   })
 
   server.use('/reflection', reflection)
+  server.use('/sheenazienadmin', sheenazienadmin)
 }
 
 export default {init}

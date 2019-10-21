@@ -19,6 +19,8 @@ const connection = {
 
       console.log('connected as id ' + connection.threadId)
     })
+
+    return connection
   },
   // connection to sequelize
   sequelize(){
