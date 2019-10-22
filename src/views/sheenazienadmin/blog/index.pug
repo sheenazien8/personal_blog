@@ -2,67 +2,132 @@ extends ./../layouts/app.pug
 
 block content
   <!-- Modal -->
-  div(id="myModal" class="modal fade" role="dialog")
+  div(id="modalPost" class="modal fade" role="dialog")
     div.modal-dialog.modal-lg
       div(class="modal-content")
         div(class="modal-header")
           h4(class="modal-title") Blog
           button(type="button" class="close" data-dismiss="modal")
             span(aria-hidden="true") &times;
-        div(class="modal-body")
-            <div class="form-group">
-              <label>Page Title</label>
-              <input type="text" class="form-control" placeholder="Page Title">
-            </div>
-            <div class="form-group">
-              <label>Page Body</label>
-              <textarea name="editor1" class="form-control" placeholder="Page Body"></textarea>
-            </div>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox"> Published
-              </label>
-            </div>
-            <div class="form-group">
-              <label>Meta Tags</label>
-              <input type="text" class="form-control" placeholder="Add Some Tags...">
-            </div>
-            <div class="form-group">
-              <label>Meta Description</label>
-              <input type="text" class="form-control" placeholder="Add Meta Description...">
-            </div>
-        div(class="modal-footer")
-          button(type="button" class="btn btn-default" data-dismiss="modal") Close
+        form#formPost
+          div(class="modal-body")
+              <div class="form-group">
+                <label>Page Title</label>
+                <input type="text" class="form-control" placeholder="Page Title" name="title">
+              </div>
+              <div class="form-group">
+                <label>Page Body</label>
+                <textarea name="body" class="form-control" placeholder="Page Body"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Meta Tags</label>
+                <input type="text" class="form-control" placeholder="Add Some Tags..." name="meta_keyword">
+              </div>
+              <div class="form-group">
+                <label>Meta Description</label>
+                <input type="text" class="form-control" placeholder="Add Meta Description..." name="meta_description">
+              </div>
+              input(type="hidden")#id_post
+          div(class="modal-footer")
+            button(type="button" class="btn btn-default" data-dismiss="modal") Close
+            button(type="button" class="btn btn-primary" id="savePost") Save
+            button(type="button" class="btn btn-primary d-none" id="updatePost") Update
   br
   .card
     .card-header
-      button(data-toggle="modal" data-target="#myModal").btn.btn-primary
+      button(data-toggle="modal" data-target="#modalPost").btn.btn-primary#add-blog
         i.fa.fa-plus Tambah Blog
     .card-body
-      table.table
-        tr
-          th #
-          th Title
-          th Description
-          th Date Post
-          th Status
-          th Views
-          th Action
-        each blog in blogs
+      .table-responsive
+        table.table
           tr
-            td 1
-            td= blog.title
-            td= blog.body.substring(0,60)
-                a(href="/sheenazienadmin/blog/" + blog.id) ..detail
-            td= blog.date
-            td
-                if blog.status
-                  span.badge.badge-success Active
-                else
-                  span.badge.badge-danger Inactive
-            td
-              span.badge.badge-default
-                i.fa.fa-eye= blog.views
-            td
-              button.btn.btn-info
-                i.fa.fa-pencil
+            th #
+            th Title
+            th Description
+            th Date Post
+            th Status
+            th Views
+            th Action
+          each blog, index in blogs
+            tr
+              td= index+1
+              td= blog.title
+              td= blog.body.substring(0,60)
+                  a(href=`blog/${blog.slug}`) ..detail
+              td= blog.date
+              td
+                  if blog.status
+                    span.badge.badge-success Active
+                  else
+                    span.badge.badge-danger Inactive
+              td
+                span.badge.badge-default
+                  i.fa.fa-eye= blog.views
+              td
+                button(data-id=`${blog.id}`).btn.btn-sm.btn-info.detail-post
+                  i.fa.fa-pencil
+                button(data-id=`${blog.id}`).btn.btn-sm.btn-info.delete-post
+                  i.fa.fa-trash
+
+  block scripts
+    script.
+      $(document).ready(function() {
+        $("#savePost").on('click', function(event) {
+          $.ajax({
+            url: '/sheenazienadmin/blog',
+            type: 'POST',
+            data: $("#formPost").serialize(),
+            success: (data) => {
+              window.location = "/sheenazienadmin/blog"
+            }
+          })
+        });
+        $("#add-blog").on('click', function(event) {
+          $("input[name=title").val("")
+          $("textarea[name=body").html("")
+          $("input[name=meta_keyword").val("")
+          $("input[name=meta_description").val("")
+          $("input#id_post").val("")
+          $("#savePost").removeClass('d-none')
+          $("#updatePost").addClass('d-none')
+        });
+        $("#updatePost").on('click', function(event) {
+          let id = $("#id_post").val()
+          $.ajax({
+            url: '/sheenazienadmin/blog/' + id,
+            type: 'PUT',
+            data: $("#formPost").serialize(),
+            success: (data) => {
+              window.location = "/sheenazienadmin/blog"
+            }
+          })
+        });
+        $(".delete-post").each(function(index, el) {
+          $(el).on('click', function(event) {
+            $.ajax({
+              url: '/sheenazienadmin/blog/' + $(this).data('id'),
+              type: 'DELETE',
+              success: (data) => {
+                window.location = "/sheenazienadmin/blog"
+              }
+            })
+          });
+        });
+        $(".detail-post").each(function(index, el) {
+          $(el).on('click', function(event) {
+            $.ajax({
+              url: '/sheenazienadmin/blog/' + $(this).data('id'),
+              success: (data) => {
+                $("input[name=title").val(data.blog.title)
+                $("textarea[name=body").html(data.blog.body)
+                $("input[name=meta_keyword").val(data.blog.meta_keyword)
+                $("input[name=meta_description").val(data.blog.meta_description)
+                $("input#id_post").val(data.blog.id)
+                $('#modalPost').modal('show')
+                $("#savePost").addClass('d-none')
+                $("#updatePost").removeClass('d-none')
+              }
+            })
+          });
+        });
+      });

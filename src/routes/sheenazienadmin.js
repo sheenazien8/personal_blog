@@ -27,7 +27,7 @@ let sessionChecker = (req, res, next) => {
 };
 
 router.get('/blog', sessionChecker, SheenaZienBlog.index)
-      .post('/blog', sessionChecker, SheenaZienBlog.create)
+      .post('/blog', sessionChecker, (SheenaZienBlog.create))
       .get('/blog/:id', sessionChecker, SheenaZienBlog.detail)
       .put('/blog/:id', sessionChecker, SheenaZienBlog.update)
       .delete('/blog/:id', sessionChecker, SheenaZienBlog.delete)

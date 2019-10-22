@@ -15,9 +15,9 @@ block content
       ul
         each blog in blogs
           li.list
-            a(href="/blog")= blog.title
+            a(href=`/blog/detail/${blog.slug}`)= blog.title
   p
-   a(href="/blog" style="color: rgb(87, 87, 87);") Lihat lebih banyak lagi
+   a(href=`/blog`  style="color: rgb(87, 87, 87);") Lihat lebih banyak lagi
   hr
 
   .wrap-diary
@@ -28,7 +28,7 @@ block content
           li.list
             a(href="/diary")= diary.title
   p
-    a(href="/blog" style="color: rgb(87, 87, 87);") Lihat lebih banyak lagi
+    a(href="/blog/detail" style="color: rgb(87, 87, 87);") Lihat lebih banyak lagi
   hr
 
   .wrap-portfolio

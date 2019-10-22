@@ -1,15 +1,16 @@
 extends ./../layouts/app.pug
 
 block content
-  .list-blog
-    h3
-      a(href="/blog/detail") Mudahnya Menjadi Pekerja Yang Sering Bersyukur
-    p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem ratione unde nemo numquam, molestias distinctio. Sint perferendis natus cum, dolor eum libero explicabo exercitationem, tenetur nulla odit a repellendus magnam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem ratione unde nemo numquam, molestias distinctio. Sint perferendis natus cum, dolor eum libero explicabo exercitationem, tenetur nulla odit a repellendus magnam.
-    .row
-      h5 Thu Oct 17, 2019 |
-      p #css
-      p #html
-      span.right
-        i.fa.fa-eye 20
-    hr
-
+  each blog in blogs
+    .list-blog
+      h3
+        a(href=`/blog/detail/${blog.slug}`)= blog.title
+      p #{blog.body.substring(0, 300)}
+      .row
+        h5 #{moment(blog.date)} |
+        - let tags = blog.meta_keyword.split(", ")
+        each tag in tags
+          p= '#'+ tag
+        span.right
+          i.fa.fa-eye #{blog.views}
+      hr
