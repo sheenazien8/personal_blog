@@ -1,0 +1,136 @@
+extends ./../layouts/app.pug
+
+block content
+  <!-- Modal -->
+  div(id="modalPorfolio" class="modal fade" role="dialog")
+    div.modal-dialog.modal-lg
+      div(class="modal-content")
+        div(class="modal-header")
+          h4(class="modal-title") Portfolio
+          button(type="button" class="close" data-dismiss="modal")
+            span(aria-hidden="true") &times;
+        form#formPorfolio
+          div(class="modal-body")
+            <div class="form-group">
+              <label>Portfolio Title</label>
+              <input type="text" class="form-control" placeholder="Portfolio Title" name="title">
+            </div>
+            <div class="form-group">
+              <label>Portfolio Link</label>
+              <input type="text" class="form-control" placeholder="Portfolio Link" name="link">
+            </div>
+            <div class="form-group">
+              <label>Portfolio Body</label>
+              <textarea name="body" class="form-control" placeholder="Portfolio Body"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Meta Tags</label>
+              <input type="text" class="form-control" placeholder="Add Some Tags..." name="meta_keyword">
+            </div>
+            <div class="form-group">
+              <label>Meta Description</label>
+              <input type="text" class="form-control" placeholder="Add Meta Description..." name="meta_description">
+            </div>
+            input(type="hidden")#id_portfolio
+          div(class="modal-footer")
+            button(type="button" class="btn btn-default" data-dismiss="modal") Close
+            button(type="button" class="btn btn-primary" id="savePorfolio") Save
+            button(type="button" class="btn btn-primary d-none" id="updatePorfolio") Update
+  br
+  .card
+    .card-header
+      button(data-toggle="modal" data-target="#modalPorfolio").btn.btn-primary#add-portfolio
+        i.fa.fa-plus Tambah Portfolio
+    .card-body
+      .table-responsive
+        table.table
+          tr
+            th #
+            th Title
+            th Link
+            th Description
+            th Date Porfolio
+            th Status
+            th Action
+          each portfolio, index in portfolios
+            tr
+              td= index+1
+              td= portfolio.title
+              td= portfolio.link
+              td= portfolio.body.substring(0,60)
+                  a(href=`portfolio/${portfolio.slug}`) ..detail
+              td= portfolio.date
+              td
+                  if portfolio.status
+                    span.badge.badge-success Active
+                  else
+                    span.badge.badge-danger Inactive
+              td
+                button(data-id=`${portfolio.id}`).btn.btn-sm.btn-info.detail-portfolio
+                  i.fa.fa-pencil
+                button(data-id=`${portfolio.id}`).btn.btn-sm.btn-info.delete-portfolio
+                  i.fa.fa-trash
+
+  block scripts
+    script.
+      $(document).ready(function() {
+        $("#savePorfolio").on('click', function(event) {
+          $.ajax({
+            url: '/sheenazienadmin/portfolio',
+            type: 'POST',
+            data: $("#formPorfolio").serialize(),
+            success: (data) => {
+              window.location = "/sheenazienadmin/portfolio"
+            }
+          })
+        });
+        $("#add-portfolio").on('click', function(event) {
+          $("input[name=title").val("")
+          $("textarea[name=body").html("")
+          $("input[name=meta_keyword").val("")
+          $("input[name=meta_description").val("")
+          $("input#id_portfolio").val("")
+          $("#savePorfolio").removeClass('d-none')
+          $("#updatePorfolio").addClass('d-none')
+        });
+        $("#updatePorfolio").on('click', function(event) {
+          let id = $("#id_portfolio").val()
+          $.ajax({
+            url: '/sheenazienadmin/portfolio/' + id,
+            type: 'PUT',
+            data: $("#formPorfolio").serialize(),
+            success: (data) => {
+              window.location = "/sheenazienadmin/portfolio"
+            }
+          })
+        });
+        $(".delete-portfolio").each(function(index, el) {
+          $(el).on('click', function(event) {
+            $.ajax({
+              url: '/sheenazienadmin/portfolio/' + $(this).data('id'),
+              type: 'DELETE',
+              success: (data) => {
+                window.location = "/sheenazienadmin/portfolio"
+              }
+            })
+          });
+        });
+        $(".detail-portfolio").each(function(index, el) {
+          $(el).on('click', function(event) {
+            $.ajax({
+              url: '/sheenazienadmin/portfolio/' + $(this).data('id'),
+              success: (data) => {
+                $("input[name=title]").val(data.portfolio.title)
+                $("input[name=link]").val(data.portfolio.link)
+                $("textarea[name=body]").html(data.portfolio.body)
+                $("input[name=meta_keyword]").val(data.portfolio.meta_keyword)
+                $("input[name=meta_description]").val(data.portfolio.meta_description)
+                $("input#id_portfolio").val(data.portfolio.id)
+                $('#modalPorfolio').modal('show')
+                $("#savePorfolio").addClass('d-none')
+                $("#updatePorfolio").removeClass('d-none')
+              }
+            })
+          });
+        });
+      });

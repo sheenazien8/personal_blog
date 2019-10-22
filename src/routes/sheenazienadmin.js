@@ -1,4 +1,5 @@
 import SheenaZienBlog from "./../controllers/SheenaZienBlog"
+import SheenaZienPortfolio from "./../controllers/SheenaZienPortfolio"
 import SheenaZienAuth from "./../controllers/SheenaZienAuth"
 import express from 'express';
 const app = express()
@@ -27,10 +28,16 @@ let sessionChecker = (req, res, next) => {
 };
 
 router.get('/blog', sessionChecker, SheenaZienBlog.index)
-      .post('/blog', sessionChecker, (SheenaZienBlog.create))
+      .post('/blog', sessionChecker, SheenaZienBlog.create)
       .get('/blog/:id', sessionChecker, SheenaZienBlog.detail)
       .put('/blog/:id', sessionChecker, SheenaZienBlog.update)
       .delete('/blog/:id', sessionChecker, SheenaZienBlog.delete)
+
+router.get('/portfolio', sessionChecker, SheenaZienPortfolio.index)
+      .post('/portfolio', sessionChecker, SheenaZienPortfolio.create)
+      .get('/portfolio/:id', sessionChecker, SheenaZienPortfolio.detail)
+      .put('/portfolio/:id', sessionChecker, SheenaZienPortfolio.update)
+      .delete('/portfolio/:id', sessionChecker, SheenaZienPortfolio.delete)
 
 router.get('/', sessionChecker, (req, res, next) => {
   return res.render('sheenazienadmin/index', {
