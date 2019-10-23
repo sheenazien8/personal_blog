@@ -11,7 +11,7 @@ const SheenaZienBlog = {
   create(req, res) {
     let post = {
       title: req.body.title,
-      slug: req.body.title.replace(/ /g, "-"),
+      slug: req.body.title.toLowerCase().replace(/ /g, "-"),
       body: req.body.body,
       date: moment().format("YYYY-MM-DD"),
       status: false,
@@ -20,6 +20,7 @@ const SheenaZienBlog = {
       meta_description: req.body.meta_description,
       user_id: req.session.user.id
     }
+    console.log(req.body.body)
     let query = database.mysql().query("INSERT INTO blogs SET ?", post, (error, results, fields) => {
       if (error) throw error
       return res.redirect('/sheenazienadmin/blog')
@@ -51,6 +52,22 @@ const SheenaZienBlog = {
         return res.send({
           blog: results[0]
         })
+    })
+  },
+  /**
+   *
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} updated reflection
+   */
+  updateStatus(req, res) {
+    let post = {
+      status: req.body.status == 'true' ? 1 : 0,
+    }
+    let query = database.mysql().query(`UPDATE blogs SET ? where id = ${req.params.id}`, post,
+      (error, results, fields) => {
+      if (error) throw error
+      return res.status(200).send('SUCCESS')
     })
   },
   /**

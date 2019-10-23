@@ -26,16 +26,18 @@ block content
       ul
         each diary in diaries
           li.list
-            a(href="/diary")= diary.title
+            a(href=`/diary/detail/${diary.slug}`)= diary.title
   p
-    a(href="/blog/detail" style="color: rgb(87, 87, 87);") Lihat lebih banyak lagi
+    a(href="/diary" style="color: rgb(87, 87, 87);") Lihat lebih banyak lagi
   hr
 
   .wrap-portfolio
     h3 Porfolio
     .portfolio
-      each blog in blogs
+      each portfolio in portfolios
         .list-portfolio
-          a(href="/portfolio/detail")= blog.title
-          p Contoh deskripsi
+          a(href=`/portfolio/detail/${portfolio.slug}`)= portfolio.title
+          p !{portfolio.body.substring(0, 25)}
 
+  p
+    a(href="/portfolio" style="color: rgb(87, 87, 87);") Lihat lebih banyak lagi

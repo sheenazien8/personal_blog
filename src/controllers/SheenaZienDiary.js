@@ -1,7 +1,7 @@
 import database from "./../../config/database"
 import moment from "moment"
 
-const SheenaZienPortfolio = {
+const SheenaZienDiary = {
   /**
    *
    * @param {object} req
@@ -13,16 +13,15 @@ const SheenaZienPortfolio = {
       title: req.body.title,
       slug: req.body.title.toLowerCase().replace(/ /g, "-"),
       body: req.body.body,
-      link: req.body.link,
       date: moment().format("YYYY-MM-DD"),
       status: false,
       meta_keyword: req.body.meta_keyword,
       meta_description: req.body.meta_description,
       user_id: req.session.user.id
     }
-    let query = database.mysql().query("INSERT INTO portfolios SET ?", post, (error, results, fields) => {
+    let query = database.mysql().query("INSERT INTO diaries SET ?", post, (error, results, fields) => {
       if (error) throw error
-      return res.redirect('/sheenazienadmin/portfolio')
+      return res.redirect('/sheenazienadmin/diary')
     })
   },
   /**
@@ -32,10 +31,10 @@ const SheenaZienPortfolio = {
    * @returns {object} reflections array
    */
   index(req, res) {
-    database.mysql().query("SELECT * FROM portfolios", (error, results, fields) => {
-      return res.render('sheenazienadmin/portfolio/index', {
+    database.mysql().query("SELECT * FROM diaries", (error, results, fields) => {
+      return res.render('sheenazienadmin/diary/index', {
         title: 'Admin Portfolio',
-        portfolios: results
+        diaries: results
       })
     })
   },
@@ -46,10 +45,10 @@ const SheenaZienPortfolio = {
    * @returns {object} reflection object
    */
   detail(req, res) {
-    database.mysql().query("SELECT * FROM portfolios where id = ?", [req.params.id],
+    database.mysql().query("SELECT * FROM diaries where id = ?", [req.params.id],
       (error, results, fields) => {
         return res.send({
-          portfolio: results[0]
+          diary: results[0]
         })
     })
   },
@@ -63,7 +62,7 @@ const SheenaZienPortfolio = {
     let post = {
       status: req.body.status == 'true' ? 1 : 0,
     }
-    let query = database.mysql().query(`UPDATE portfolios SET ? where id = ${req.params.id}`, post,
+    let query = database.mysql().query(`UPDATE diaries SET ? where id = ${req.params.id}`, post,
       (error, results, fields) => {
       if (error) throw error
       return res.status(200).send('SUCCESS')
@@ -80,14 +79,13 @@ const SheenaZienPortfolio = {
       title: req.body.title,
       slug: req.body.title.replace(/ /g, "-"),
       body: req.body.body,
-      link: req.body.link,
       date: moment().format("YYYY-MM-DD"),
       status: false,
       meta_keyword: req.body.meta_keyword,
       meta_description: req.body.meta_description,
       user_id: req.session.user.id
     }
-    let query = database.mysql().query(`UPDATE portfolios SET ? where id = ${req.params.id}`, post,
+    let query = database.mysql().query(`UPDATE diaries SET ? where id = ${req.params.id}`, post,
       (error, results, fields) => {
       if (error) throw error
       return res.status(200).send('SUCCESS')
@@ -100,11 +98,11 @@ const SheenaZienPortfolio = {
    * @returns {void} return statuc code 204
    */
   delete(req, res) {
-    database.mysql().query('DELETE FROM portfolios WHERE id = ?', [req.params.id], function (error, results, fields) {
+    database.mysql().query('DELETE FROM diaries WHERE id = ?', [req.params.id], function (error, results, fields) {
       if (error) throw error;
       return res.status(200).send('SUCCESS')
     })
   }
 }
 
-export default SheenaZienPortfolio;
+export default SheenaZienDiary;

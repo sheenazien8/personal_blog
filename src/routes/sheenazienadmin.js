@@ -1,6 +1,7 @@
 import SheenaZienBlog from "./../controllers/SheenaZienBlog"
 import SheenaZienPortfolio from "./../controllers/SheenaZienPortfolio"
 import SheenaZienAuth from "./../controllers/SheenaZienAuth"
+import SheenaZienDiary from "./../controllers/SheenaZienDiary"
 import express from 'express';
 const app = express()
 const router = express.Router()
@@ -31,13 +32,22 @@ router.get('/blog', sessionChecker, SheenaZienBlog.index)
       .post('/blog', sessionChecker, SheenaZienBlog.create)
       .get('/blog/:id', sessionChecker, SheenaZienBlog.detail)
       .put('/blog/:id', sessionChecker, SheenaZienBlog.update)
+      .put('/blog/status/:id', sessionChecker, SheenaZienBlog.updateStatus)
       .delete('/blog/:id', sessionChecker, SheenaZienBlog.delete)
 
 router.get('/portfolio', sessionChecker, SheenaZienPortfolio.index)
       .post('/portfolio', sessionChecker, SheenaZienPortfolio.create)
       .get('/portfolio/:id', sessionChecker, SheenaZienPortfolio.detail)
       .put('/portfolio/:id', sessionChecker, SheenaZienPortfolio.update)
+      .put('/portfolio/status/:id', sessionChecker, SheenaZienPortfolio.updateStatus)
       .delete('/portfolio/:id', sessionChecker, SheenaZienPortfolio.delete)
+
+router.get('/diary', sessionChecker, SheenaZienDiary.index)
+      .post('/diary', sessionChecker, SheenaZienDiary.create)
+      .get('/diary/:id', sessionChecker, SheenaZienDiary.detail)
+      .put('/diary/:id', sessionChecker, SheenaZienDiary.update)
+      .put('/diary/status/:id', sessionChecker, SheenaZienDiary.updateStatus)
+      .delete('/diary/:id', sessionChecker, SheenaZienDiary.delete)
 
 router.get('/', sessionChecker, (req, res, next) => {
   return res.render('sheenazienadmin/index', {

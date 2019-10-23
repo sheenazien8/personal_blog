@@ -2,7 +2,7 @@ extends ./../layouts/app.pug
 
 block content
   h3 #{blog[0].title}
-  p #{blog[0].body}
+  div !{blog[0].body}
   .row
     h5 #{moment(blog[0].date)} |
     - let tags = blog[0].meta_keyword.split(", ")

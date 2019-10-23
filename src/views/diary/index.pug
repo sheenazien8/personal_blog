@@ -1,0 +1,16 @@
+extends ./../layouts/app.pug
+
+block content
+  each diary in diaries
+    .list-diary
+      h3
+        a(href=`/diary/detail/${diary.slug}`)= diary.title
+      div !{diary.body.substring(0, 300)}
+      .row
+        h5 #{moment(diary.date)} |
+        - let tags = diary.meta_keyword.split(", ")
+        each tag in tags
+          p= '#'+ tag
+        span.right
+          i.fa.fa-eye #{diary.views}
+      hr

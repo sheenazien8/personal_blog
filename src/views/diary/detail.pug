@@ -1,0 +1,12 @@
+extends ./../layouts/app.pug
+
+block content
+  h3 #{diary[0].title}
+  div !{diary[0].body}
+  .row
+    h5 #{moment(diary[0].date)} |
+    - let tags = diary[0].meta_keyword.split(", ")
+    each tag in tags
+      p= '#'+ tag
+    span.right
+      i.fa.fa-eye #{diary[0].views}

@@ -11,23 +11,20 @@ block content
             span(aria-hidden="true") &times;
         form#formPost
           div(class="modal-body")
-              <div class="form-group">
-                <label>Page Title</label>
-                <input type="text" class="form-control" placeholder="Page Title" name="title">
-              </div>
-              <div class="form-group">
-                <label>Page Body</label>
-                <textarea name="body" class="form-control" placeholder="Page Body"></textarea>
-              </div>
-              <div class="form-group">
-                <label>Meta Tags</label>
-                <input type="text" class="form-control" placeholder="Add Some Tags..." name="meta_keyword">
-              </div>
-              <div class="form-group">
-                <label>Meta Description</label>
-                <input type="text" class="form-control" placeholder="Add Meta Description..." name="meta_description">
-              </div>
-              input(type="hidden")#id_post
+            div(class="form-group")
+              label Page Title
+              input(type="text" class="form-control" placeholder="Page Title" name="title")
+            div(class="form-group")
+              label Page Body
+              textarea(name="body" id="page_body" class="form-control" placeholder="Page Body")
+            div(class="form-group")
+              label Meta Tags
+              input(type="text" class="form-control" placeholder="Add Some Tags..." name="meta_keyword")
+              small(id="emailHelp" class="form-text text-muted") Pisahkan Dengan Koma
+            div(class="form-group")
+              label Meta Description
+              input(type="text" class="form-control" placeholder="Add Meta Description..." name="meta_description")
+            input(type="hidden")#id_post
           div(class="modal-footer")
             button(type="button" class="btn btn-default" data-dismiss="modal") Close
             button(type="button" class="btn btn-primary" id="savePost") Save
@@ -56,10 +53,12 @@ block content
                   a(href=`blog/${blog.slug}`) ..detail
               td= blog.date
               td
-                  if blog.status
-                    span.badge.badge-success Active
-                  else
-                    span.badge.badge-danger Inactive
+                if blog.status
+                  button(data-status=`${false}` data-id=`${blog.id}`).btn.btn-sm.udpateStatus
+                    span(data-status=`${false}` data-id=`${blog.id}`).badge.badge-success Active
+                else
+                  button(data-status=`${true}` data-id=`${blog.id}`).btn.btn-sm.udpateStatus
+                    span(data-status=`${true}` data-id=`${blog.id}`).badge.badge-danger Inactive
               td
                 span.badge.badge-default
                   i.fa.fa-eye= blog.views
@@ -72,7 +71,28 @@ block content
   block scripts
     script.
       $(document).ready(function() {
+        function updateAllMessageForms()
+        {
+            for (instance in CKEDITOR.instances) {
+                    CKEDITOR.instances[instance].updateElement()
+            }
+        }
+        CKEDITOR.replace('page_body')
+        $(".udpateStatus").click((event) => {
+          let status = $(event.target).data('status')
+          $.ajax({
+            url: '/sheenazienadmin/blog/status/' + $(event.target).data('id'),
+            type: 'PUT',
+            data: {
+              status: status
+            },
+            success: (response) => {
+              window.location = "/sheenazienadmin/blog"
+            }
+          })
+        })
         $("#savePost").on('click', function(event) {
+          updateAllMessageForms()
           $.ajax({
             url: '/sheenazienadmin/blog',
             type: 'POST',

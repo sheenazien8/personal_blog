@@ -11,26 +11,22 @@ block content
             span(aria-hidden="true") &times;
         form#formPorfolio
           div(class="modal-body")
-            <div class="form-group">
-              <label>Portfolio Title</label>
-              <input type="text" class="form-control" placeholder="Portfolio Title" name="title">
-            </div>
-            <div class="form-group">
-              <label>Portfolio Link</label>
-              <input type="text" class="form-control" placeholder="Portfolio Link" name="link">
-            </div>
-            <div class="form-group">
-              <label>Portfolio Body</label>
-              <textarea name="body" class="form-control" placeholder="Portfolio Body"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Meta Tags</label>
-              <input type="text" class="form-control" placeholder="Add Some Tags..." name="meta_keyword">
-            </div>
-            <div class="form-group">
-              <label>Meta Description</label>
-              <input type="text" class="form-control" placeholder="Add Meta Description..." name="meta_description">
-            </div>
+            div(class="form-group")
+              label Portfolio Title
+              input(type="text" class="form-control" placeholder="Portfolio Title" name="title")
+            div(class="form-group")
+              label Portfolio Link
+              input(type="text" class="form-control" placeholder="Portfolio Link" name="link")
+            div(class="form-group")
+              label Portfolio Body
+              textarea(name="body" id="portfolio_body" class="form-control" placeholder="Portfolio Body")
+            div(class="form-group")
+              label Meta Tags
+              input(type="text" class="form-control" placeholder="Add Some Tags..." name="meta_keyword")
+              small(id="emailHelp" class="form-text text-muted") Pisahkan Dengan Koma
+            div(class="form-group")
+              label Meta Description
+              input(type="text" class="form-control" placeholder="Add Meta Description..." name="meta_description")
             input(type="hidden")#id_portfolio
           div(class="modal-footer")
             button(type="button" class="btn btn-default" data-dismiss="modal") Close
@@ -62,9 +58,11 @@ block content
               td= portfolio.date
               td
                   if portfolio.status
-                    span.badge.badge-success Active
+                    button(data-status=`${false}` data-id=`${portfolio.id}`).btn.btn-sm.udpateStatus
+                      span(data-status=`${false}` data-id=`${portfolio.id}`).badge.badge-success Active
                   else
-                    span.badge.badge-danger Inactive
+                    button(data-status=`${true}` data-id=`${portfolio.id}`).btn.btn-sm.udpateStatus
+                      span(data-status=`${true}` data-id=`${portfolio.id}`).badge.badge-danger Inactive
               td
                 button(data-id=`${portfolio.id}`).btn.btn-sm.btn-info.detail-portfolio
                   i.fa.fa-pencil
@@ -74,7 +72,28 @@ block content
   block scripts
     script.
       $(document).ready(function() {
+        function updateAllMessageForms()
+        {
+            for (instance in CKEDITOR.instances) {
+                    CKEDITOR.instances[instance].updateElement()
+            }
+        }
+        CKEDITOR.replace('portfolio_body')
+        $(".udpateStatus").click((event) => {
+          let status = $(event.target).data('status')
+          $.ajax({
+            url: '/sheenazienadmin/portfolio/status/' + $(event.target).data('id'),
+            type: 'PUT',
+            data: {
+              status: status
+            },
+            success: (response) => {
+              window.location = "/sheenazienadmin/portfolio"
+            }
+          })
+        })
         $("#savePorfolio").on('click', function(event) {
+        updateAllMessageForms()
           $.ajax({
             url: '/sheenazienadmin/portfolio',
             type: 'POST',

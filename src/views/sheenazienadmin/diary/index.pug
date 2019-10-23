@@ -1,0 +1,153 @@
+extends ./../layouts/app.pug
+
+block content
+  <!-- Modal -->
+  div(id="modalDiary" class="modal fade" role="dialog")
+    div.modal-dialog.modal-lg
+      div(class="modal-content")
+        div(class="modal-header")
+          h4(class="modal-title") Diary
+          button(type="button" class="close" data-dismiss="modal")
+            span(aria-hidden="true") &times;
+        form#formDiary
+          div(class="modal-body")
+            div(class="form-group")
+              label Diary Title
+              input(type="text" class="form-control" placeholder="Diary Title" name="title")
+            div(class="form-group")
+              label Diary Link
+              input(type="text" class="form-control" placeholder="Diary Link" name="link")
+            div(class="form-group")
+              label Diary Body
+              textarea(name="body" id="diary_body" class="form-control" placeholder="Diary Body")
+            div(class="form-group")
+              label Meta Tags
+              input(type="text" class="form-control" placeholder="Add Some Tags..." name="meta_keyword")
+              small(id="emailHelp" class="form-text text-muted") Pisahkan Dengan Koma
+            div(class="form-group")
+              label Meta Description
+              input(type="text" class="form-control" placeholder="Add Meta Description..." name="meta_description")
+            input(type="hidden")#id_diary
+          div(class="modal-footer")
+            button(type="button" class="btn btn-default" data-dismiss="modal") Close
+            button(type="button" class="btn btn-primary" id="saveDiary") Save
+            button(type="button" class="btn btn-primary d-none" id="updateDiary") Update
+  br
+  .card
+    .card-header
+      button(data-toggle="modal" data-target="#modalDiary").btn.btn-primary#add-diary
+        i.fa.fa-plus Tambah Diary
+    .card-body
+      .table-responsive
+        table.table
+          tr
+            th #
+            th Title
+            th Description
+            th Date Diary
+            th Status
+            th Action
+          each diary, index in diaries
+            tr
+              td= index+1
+              td= diary.title
+              td= diary.body.substring(0,60)
+                  a(href=`diary/${diary.slug}`) ..detail
+              td= diary.date
+              td
+                  if diary.status
+                    button(data-status=`${false}` data-id=`${diary.id}`).btn.btn-sm.udpateStatus
+                      span(data-status=`${false}` data-id=`${diary.id}`).badge.badge-success Active
+                  else
+                    button(data-status=`${true}` data-id=`${diary.id}`).btn.btn-sm.udpateStatus
+                      span(data-status=`${true}` data-id=`${diary.id}`).badge.badge-danger Inactive
+              td
+                button(data-id=`${diary.id}`).btn.btn-sm.btn-info.detail-diary
+                  i.fa.fa-pencil
+                button(data-id=`${diary.id}`).btn.btn-sm.btn-info.delete-diary
+                  i.fa.fa-trash
+
+  block scripts
+    script.
+      $(document).ready(function() {
+        function updateAllMessageForms()
+        {
+            for (instance in CKEDITOR.instances) {
+                    CKEDITOR.instances[instance].updateElement()
+            }
+        }
+        CKEDITOR.replace('diary_body')
+        $(".udpateStatus").click((event) => {
+          let status = $(event.target).data('status')
+          $.ajax({
+            url: '/sheenazienadmin/diary/status/' + $(event.target).data('id'),
+            type: 'PUT',
+            data: {
+              status: status
+            },
+            success: (response) => {
+              window.location = "/sheenazienadmin/diary"
+            }
+          })
+        })
+        $("#saveDiary").on('click', function(event) {
+        updateAllMessageForms()
+          $.ajax({
+            url: '/sheenazienadmin/diary',
+            type: 'POST',
+            data: $("#formDiary").serialize(),
+            success: (data) => {
+              window.location = "/sheenazienadmin/diary"
+            }
+          })
+        });
+        $("#add-diary").on('click', function(event) {
+          $("input[name=title").val("")
+          $("textarea[name=body").html("")
+          $("input[name=meta_keyword").val("")
+          $("input[name=meta_description").val("")
+          $("input#id_diary").val("")
+          $("#saveDiary").removeClass('d-none')
+          $("#updateDiary").addClass('d-none')
+        });
+        $("#updateDiary").on('click', function(event) {
+          let id = $("#id_diary").val()
+          $.ajax({
+            url: '/sheenazienadmin/diary/' + id,
+            type: 'PUT',
+            data: $("#formDiary").serialize(),
+            success: (data) => {
+              window.location = "/sheenazienadmin/diary"
+            }
+          })
+        });
+        $(".delete-diary").each(function(index, el) {
+          $(el).on('click', function(event) {
+            $.ajax({
+              url: '/sheenazienadmin/diary/' + $(this).data('id'),
+              type: 'DELETE',
+              success: (data) => {
+                window.location = "/sheenazienadmin/diary"
+              }
+            })
+          });
+        });
+        $(".detail-diary").each(function(index, el) {
+          $(el).on('click', function(event) {
+            $.ajax({
+              url: '/sheenazienadmin/diary/' + $(this).data('id'),
+              success: (data) => {
+                $("input[name=title]").val(data.diary.title)
+                $("input[name=link]").val(data.diary.link)
+                $("textarea[name=body]").html(data.diary.body)
+                $("input[name=meta_keyword]").val(data.diary.meta_keyword)
+                $("input[name=meta_description]").val(data.diary.meta_description)
+                $("input#id_diary").val(data.diary.id)
+                $('#modalDiary').modal('show')
+                $("#saveDiary").addClass('d-none')
+                $("#updateDiary").removeClass('d-none')
+              }
+            })
+          });
+        });
+      });

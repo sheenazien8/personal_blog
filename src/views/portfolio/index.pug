@@ -1,10 +1,16 @@
 extends ./../layouts/app.pug
 
 block content
-  .wrap-portfolio
-    h3 Porfolio
-    .portfolio
-      each blog in blogs
-        .list-portfolio
-          a(href="/portfolio/detail")= blog.title
-          p Contoh deskripsi
+  each portfolio in portfolios
+    .list-portfolio
+      h3
+        a(href=`/portfolio/detail/${portfolio.slug}`)= portfolio.title
+      div !{portfolio.body.substring(0, 300)}
+      .row
+        h5 #{moment(portfolio.date)} |
+        - let tags = portfolio.meta_keyword.split(", ")
+        each tag in tags
+          p= '#'+ tag
+        span.right
+          i.fa.fa-eye #{portfolio.views}
+      hr
