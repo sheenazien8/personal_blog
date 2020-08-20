@@ -16,7 +16,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-watch": "^7.0.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.1.0",
     "dump-die": "^1.0.0",
